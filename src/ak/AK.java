@@ -5,6 +5,7 @@ import static core.Controls.*;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.net.URL;
 
 import core.VergeEngine;
 import domain.CHR;
@@ -88,8 +89,8 @@ public class AK extends VergeEngine {
 	static int player=0;
 	static boolean debug;
 	static VImage img=null;
-	static VImage mapa, rock_t, rock_g, rock_c, leaf, brac0, brac1, firing;
-	static String snd[] = new String[20];
+	static VImage mapa, rock_t, rock_g, rock_c, leaf, brac0, brac1, firing, shop;
+	static URL snd[] = new URL[20];
 	static int spx[] = new int [25]; // for rock fragments and other sprites, (x,y),energy and type
 	static int spy[] = new int [25];
 	static int spe[] = new int [25];
@@ -115,7 +116,7 @@ public class AK extends VergeEngine {
 		setappname("Alex Kidd: Remake");
 		
 		VImage title = new VImage(load("res/image/Title.PNG"));
-		
+		playmusic(load("res/music/intro.vgz"));
 		Color background = new Color(-86);
 
 		timer = 0;
@@ -141,11 +142,15 @@ public class AK extends VergeEngine {
 			if(timer < 400 || timer%50 < 25)
 				rectfill(88, 207, 228, 218, background, screen);
 			
+			if(b3) {
+				exit("Thanks for playing JVerge Alex Kidd remake!");
+			}
+			
 			showpage();
 		}
 		unpress(1);
 		
-		//Map("level01.map");
+		Gold = 0;
 		StartUp();
 	}
 
@@ -156,6 +161,7 @@ public class AK extends VergeEngine {
 		currentMusic=music;
 		currentLevel = level;
 		Cond=cnd;
+		inv = 0;
 		if(Prog > 0)
 			changemap = true;
 		map(mapname);
@@ -165,36 +171,33 @@ public class AK extends VergeEngine {
 	static void DoLevel() { // Hills, Lake, Field/Grass, Cave, Forest, Castle
 		//if(Prog==1)  Mapswitch("Level30.map",1,34,277,190,"res/music/field.vgz", COND_WALK, "");	// Castle
 		if(Prog<=1)  Mapswitch("level01.map",2,4,277,190,"res/music/field.vgz", COND_WALK, "Mount Nibana");	// Hills
-		if(Prog==2)  Mapswitch("level02.map",2,5,290,176,"res/music/field.vgz", COND_WALK, "Lake Bimurai");	// Lake
-		if(Prog==3)  Mapswitch("level03.map",2,10,279,166,"res/music/field.vgz", COND_WALK, "");	// Field (C)
-		if(Prog==4)  Mapswitch("level04.map",8,15,291,143,"res/music/field.vgz", COND_WALK, "");	// Cave
-		if(Prog==5)  Mapswitch("level05.map",3,14,291,143,"res/music/field.vgz", COND_WALK, "");	// Wood (starting grass)
-		if(Prog==6)  Mapswitch("level06.map",2,14,270,121,"res/music/field.vgz", COND_WALK, "");	// Grass (City)
+		if(Prog==2)  Mapswitch("level02.map",2,5,290,182,"res/music/field.vgz", COND_WALK, "Tatadero's Pond");	// Lake
+		if(Prog==3)  Mapswitch("level03.map",2,10,279,177,"res/music/field.vgz", COND_WALK, "Plains of Tatadero");	// Field (C)
+		if(Prog==4)  Mapswitch("level04.map",8,15,282,160,"res/music/field.vgz", COND_WALK, "Cave of Moonnight");	// Cave
+		if(Prog==5)  Mapswitch("level05.map",8,2,290,152,"res/music/swim.vgz", COND_SWIM, "Lake Bimurai");	// Lake
+		if(Prog==6)  Mapswitch("level06.map",2,15,282,144,"res/music/field.vgz", COND_WALK, "Grassland of Bimurai");	// Grass (City)
+		if(Prog==7)  Mapswitch("level07.map",2,14,290,115,"res/music/field.vgz", COND_WALK, "City of Bimurai"); 	// Hills
+		if(Prog==8)  Mapswitch("level08.map",4,14,267,113,"res/music/field.vgz", COND_WALK, "Woods of Totj");		//
+		if(Prog==9)  Mapswitch("level09.map",2,14,245,109,"res/music/field.vgz", COND_WALK, "Marshes of Ending");	// Marshes
+		if(Prog==10) Mapswitch("level10.map",8,73,234,105,"res/music/field.vgz", COND_WALK, "Mountain of Dabresh");	// Cave	(Mountain)
+		if(Prog==11) Mapswitch("level11.map",4,14,229,90,"res/music/field.vgz", COND_WALK, "Rooftop of Dabresh");	// Wood
+		if(Prog==12) Mapswitch("level12.map",9,2,232,87,"res/music/field.vgz", COND_WALK, "Falling from the Peak");	// Fall
+		if(Prog==13) Mapswitch("level13.map",26,7,221,96,"res/music/field.vgz", COND_WALK, "Rockland"); 	// Hills
+		if(Prog==14) Mapswitch("level14.map",1,72,216,107,"res/music/field.vgz", COND_WALK, "Valley Patarai");	// Grass
+		if(Prog==15) Mapswitch("level15.map",2,13,229,115,"res/music/swim.vgz", COND_SURF, "River Patarai");	// Lake
+		if(Prog==16) Mapswitch("level16.map",2,10,211,134,"res/music/field.vgz", COND_WALK, "Field of Zo");	// Cave (starting field)
+		if(Prog==17) Mapswitch("level17.map",2,174,197,139,"res/music/field.vgz", COND_WALK, "Forest of Zozo");	// Wood (vertical)
+		if(Prog==18) Mapswitch("level18.map",2,14,180,136,"res/music/field.vgz", COND_WALK, "Turquoise Plains");	// Grass+Wood
+		if(Prog==19) Mapswitch("level19.map",1,12,212,126,"res/music/field.vgz", COND_WALK, "Challenge 1");	// Secret1 (eagle)
+		if(Prog==20) Mapswitch("level20.map",1,12,212,126,"res/music/swim.vgz", COND_SWIM, "Challenge 2");	// Secret2 (fish)
+		if(Prog==21) Mapswitch("level21.map",1,12,212,126,"res/music/field.vgz", COND_WALK, "Challenge 3");	// Secret3 (bull)
+		if(Prog==22) Mapswitch("level22.map",1,12,212,126,"res/music/field.vgz", COND_WALK, "Challenge 4");	// Secret3 (bat/owl)
 	
-		if(Prog==7)  Mapswitch("level07.map",2,3,290,186,"res/music/field.vgz", COND_WALK, ""); 	// Hills
-		if(Prog==8)  Mapswitch("level08.map",8,0,288,151,"res/music/swim.vgz", COND_SWIM, "");	// Lake
-		if(Prog==9)  Mapswitch("level09.map",2,14,283,132,"res/music/field.vgz", COND_WALK, "");	// Grass
-		if(Prog==10) Mapswitch("level10.map",8,73,234,105,"res/music/field.vgz", COND_WALK, "");	// Cave	(Mountain)
-		if(Prog==11) Mapswitch("level11.map",2,14,258,107,"res/music/field.vgz", COND_WALK, "");	// Wood
-		if(Prog==12) Mapswitch("level12.map",9,2,228,86,"res/music/field.vgz", COND_WALK, "");	// Fall
+		//if(Prog==23) Mapswitch("MFase1.map",3,5,228,86,"res/music/field.vgz", COND_WALK, ""); 	// Hills Miracle World
+		//if(Prog==24) Mapswitch("MFase3.map",4,5,228,86,"res/music/swim.vgz", COND_SWIM, ""); 		// Lake Miracle World
+		//if(Prog==25) Mapswitch("MFase2.map",4,12,228,86,"res/music/field.vgz", COND_WALK, ""); 	// Field Miracle World
 	
-		if(Prog==13) Mapswitch("level13.map",26,7,290,186,"res/music/field.vgz", COND_WALK, ""); 	// Hills
-		if(Prog==14) Mapswitch("level14.map",2,13,288,151,"res/music/swim.vgz", COND_SURF, "River Patarai");	// Lake
-		if(Prog==15) Mapswitch("level15.map",2,15,228,86,"res/music/field.vgz", COND_WALK, "");	// Grass
-		if(Prog==16) Mapswitch("level16.map",2,10,228,86,"res/music/field.vgz", COND_WALK, "");	// Cave (starting field)
-		if(Prog==17) Mapswitch("level17.map",2,174,228,86,"res/music/field.vgz", COND_WALK, "");	// Wood (vertical)
-		if(Prog==18) Prog++;
-	
-		if(Prog==19) Mapswitch("level19.map",1,12,228,86,"res/music/field.vgz", COND_WALK, "");	// Secret1 (eagle)
-		if(Prog==20) Mapswitch("level20.map",1,12,228,86,"res/music/swim.vgz", COND_SWIM, "");	// Secret2 (fish)
-		if(Prog==21) Mapswitch("level21.map",1,12,228,86,"res/music/field.vgz", COND_WALK, "");	// Secret3 (bull)
-		if(Prog==22) Mapswitch("level22.map",1,12,228,86,"res/music/field.vgz", COND_WALK, "");	// Secret3 (bat/owl)
-	
-		if(Prog==23) Mapswitch("MFase1.map",3,5,228,86,"res/music/field.vgz", COND_WALK, ""); 	// Hills Miracle World
-		if(Prog==24) Mapswitch("MFase3.map",4,5,228,86,"res/music/swim.vgz", COND_SWIM, ""); 		// Lake Miracle World
-		if(Prog==25) Mapswitch("MFase2.map",4,12,228,86,"res/music/field.vgz", COND_WALK, ""); 	// Field Miracle World
-	
-		if(Prog==26) exit("Thanks for playing...");              // Palace (C)
+		if(Prog>=23) exit("Thanks for playing..."); 
 		
 		if(Prog==0) Prog++; // for start-up purposed
 		Prog++;
@@ -202,29 +205,31 @@ public class AK extends VergeEngine {
 
 	static void StartUp() 
 	{
-		
-		rock_t=new VImage(load("res/image/Rock_t.gif"));
-		rock_g=new VImage(load("res/image/Rock_g.gif"));
-		rock_c=new VImage(load("res/image/Rock_c.gif"));	
-		leaf=new VImage(load("res/image/leaf.gif"));
-		brac0=new VImage(load("res/image/brac0.gif"));
-		brac1=new VImage(load("res/image/brac1.gif"));
-		firing=new VImage(load("res/image/firing.gif"));
-		mapa=new VImage(load("res/image/world.gif"));
-		
-		
-		snd[1]="res/sound/Mapa.mp3";  
-		snd[2]="res/sound/Gold.wav";
-		snd[3]="res/sound/Punch.wav"; 
-		snd[4]="res/sound/Rock.wav";
-		snd[5]="res/sound/Star.wav";
-		snd[6]="res/sound/Death.wav";
-		snd[7]="res/sound/Hit.wav";
-		snd[8]="res/sound/Brac.wav";
-		snd[9]="res/sound/Item.wav";
-		snd[10]="res/sound/Water.wav";		
-
-		Name="akidd.chr";
+		if(Prog==0) {
+			rock_t=new VImage(load("res/image/Rock_t.gif"));
+			rock_g=new VImage(load("res/image/Rock_g.gif"));
+			rock_c=new VImage(load("res/image/Rock_c.gif"));	
+			leaf=new VImage(load("res/image/leaf.gif"));
+			brac0=new VImage(load("res/image/brac0.gif"));
+			brac1=new VImage(load("res/image/brac1.gif"));
+			firing=new VImage(load("res/image/firing.gif"));
+			shop = new VImage(load("res/image/shopkeep.png"));
+			mapa=new VImage(load("res/image/world.gif"));
+			
+			
+			snd[1]=load("res/sound/Mapa.mp3");  
+			snd[2]=load("res/sound/Gold.wav");
+			snd[3]=load("res/sound/Punch.wav"); 
+			snd[4]=load("res/sound/Rock.wav");
+			snd[5]=load("res/sound/Star.wav");
+			snd[6]=load("res/sound/Death.wav");
+			snd[7]=load("res/sound/Hit.wav");
+			snd[8]=load("res/sound/Brac.wav");
+			snd[9]=load("res/sound/Item.wav");
+			snd[10]=load("res/sound/Water.wav");		
+	
+			Name="akidd.chr";
+		}
 		
 		DoLevel();
 	}
@@ -232,6 +237,7 @@ public class AK extends VergeEngine {
 	static void showmapscreen() 
 	{
 	  int b=0;
+	  stopmusic();
 	  playsound(snd[1]);
 	  Wait(20);
 	  
@@ -332,7 +338,7 @@ public class AK extends VergeEngine {
 					Wait(1);
 				}
 				currentMusic="res/music/swim.vgz";
-				playmusic(currentMusic);
+				playmusic(load(currentMusic));
 			}
 			break;
 
@@ -373,8 +379,64 @@ public class AK extends VergeEngine {
 				State=S_STOPPED;
 				Cond = COND_ROPE;
 			}*/
+			break;
+				
+			case 13: // Moto Shop
+			CallShop(1);
+			break;
+
+	 		case 14: // Item: Power Bracelet
+			settile(zx, zy, 1, 0);
+			setzone(zx, zy, 0);
+			brac = 1;
+			break;	
+			
+			case 15: // Heli Shop
+			CallShop(2);
+			break;
+
 			
 	 	}
+	}
+
+	private static void CallShop(int i) {
+			if(up && Cond!=COND_MOTO && Cond!=COND_HELI) {
+			unpress(5);
+			boolean selYes = true;
+			while(!b1 && !b2) {
+				render();
+				rectfill(70, 45, 250, 150, Color.BLACK, screen);
+				drawText(80, 60, "Do you want to buy the");
+				if(i == 1) drawText(80, 85, " Motocycle for $200?");
+				if(i == 2) drawText(80, 85, " Peticopter for $200?");
+				drawText(120, 110, "YES");
+				drawText(120, 130, "NO");
+				tblit(200, 110, shop, screen);
+				drawText(105, selYes ? 110: 120, ">");
+	
+				if(up || down) {
+					selYes = !selYes;
+					unpress(5);
+					unpress(6);
+				}
+				showpage();
+			}
+			if(b1) {
+				unpress(1);
+				if(Gold >= 200) {
+					Gold-=200;
+					if(i==1) {
+						Cond=COND_MOTO;
+						playmusic(load("res/music/moto.vgz"));
+					}
+					if(i==2) {
+						Cond=COND_HELI;
+						playmusic(load("res/music/swim.vgz"));
+					}					
+				}
+			}
+		}
+		
 	}
 
 	public static void game() 
@@ -382,10 +444,11 @@ public class AK extends VergeEngine {
 	showmapscreen();
 	if(Prog==0) StartUp();
 
-	// This changes all entities to load the CHR info from an image file
+	// This changes all 'monster.chr' entities to load the CHR info from an image file
 	CHR c = CHR.createCHRFromImage(32, 32, 8, 56, true, new VImage(load("monster_newt.png")));
 	for(int i=0; i<numentities; i++) {
-		entity.get(i).chr = c;
+		if(entity.get(i).chrname.equalsIgnoreCase("monster.chr"))
+			entity.get(i).chr = c;
 	}
 	
 	
@@ -427,6 +490,7 @@ public class AK extends VergeEngine {
 
 	static void NormalCondition(int Cnd)
 	{
+		stopmusic();
 		unpress(0);
 		Cond=Cnd;
 		State=S_STOPPED; 
@@ -436,7 +500,7 @@ public class AK extends VergeEngine {
 	 	velocity=0;pdelay=0;tdelay=0;timer=0;
 		friction = FRIC_NOR;
 	 	entity.get(player).face=1;Energy=3;
-	 	playmusic(currentMusic);
+	 	playmusic(load(currentMusic));
 	}
 
 	static void ControlKeys() 
@@ -448,14 +512,15 @@ public class AK extends VergeEngine {
 	 if(getkey(SCAN_3)) Slow=2;
 	 if(getkey(SCAN_4)) Slow=3;
 	 if(getkey(SCAN_A)) {debug=true; while(!b1) UpdateControls();}
+/* Rafael: Cheats are disabled
 	 if(getkey(SCAN_B)) brac=1;
 	 if(getkey(SCAN_F)) {Cond=COND_FLY;State=S_STOPPED;}
-	 if(getkey(SCAN_H)) {Cond=COND_HELI;playmusic("res/music/swim.vgz");} // Heli.mp3
+	 if(getkey(SCAN_H)) {Cond=COND_HELI;playmusic(load("res/music/swim.vgz"));} // Heli.mp3
 	 if(getkey(SCAN_I)) inv=100000;
 	 if(getkey(SCAN_K)) GetKilled(2);
 	 if(getkey(SCAN_L)) { Prog=SelectLevel(6, 4);DoLevel();}
-	 if(getkey(SCAN_M)) {Cond=COND_MOTO;playmusic("res/music/moto.vgz");}
-	 if(getkey(SCAN_N)) { NormalCondition(COND_WALK);}
+	 if(getkey(SCAN_M)) {Cond=COND_MOTO;playmusic(load("res/music/moto.vgz"));}
+	 if(getkey(SCAN_N)) { Gold+=200; NormalCondition(COND_WALK);}
 	 if(getkey(SCAN_P)) {
 	  //copyimagetoclipboard(screen);
 	  img = new VImage(current_map.getWidth()*16, current_map.getHeight()*16);
@@ -463,9 +528,10 @@ public class AK extends VergeEngine {
 	  copyimagetoclipboard(img);
 	 }
 	 //if(getkey(SCAN_R]) setRandomAlex(1);
-	 if(getkey(SCAN_S)) {Cond=COND_SURF;playmusic("res/music/swim.vgz");}
+	 if(getkey(SCAN_S)) {Cond=COND_SURF;playmusic(load("res/music/swim.vgz"));}
 	 if(getkey(SCAN_X)) Cond=COND_STAR;
 	 //if(getkey(SCAN_Z)) {Cond=COND_SHIW;changeCHR(player, "shinobi.chr");}
+	 */
 	 
 	 if(right && left && State==S_WALKING) { State=S_STOPPED;velocity=0;}
 
@@ -695,7 +761,7 @@ public class AK extends VergeEngine {
 				}
 				else {
 					CallEvent(6);
-					entity.get(player).incy(54);
+					entity.get(player).incy(24);
 					return;
 				}
 				
@@ -1199,8 +1265,8 @@ public class AK extends VergeEngine {
 		
 		else if(entity.get(aa).speed==7) // Big Fish
 		{
-			if(entity.get(aa).face%2==0) entity.get(aa).incx(-1); 
-			if(entity.get(aa).face%2==1) entity.get(aa).incx();
+			if(entity.get(aa).face%2==0) entity.get(aa).incx(-2); 
+			if(entity.get(aa).face%2==1) entity.get(aa).incx(2);
 			if(entity.get(aa).face==0 || entity.get(aa).face==1) entity.get(aa).incy(3); 
 			if(entity.get(aa).face==2 || entity.get(aa).face==3) entity.get(aa).incy(-3);
 			if(Obstruct(aa,1,24,16)) entity.get(aa).face--;
@@ -1327,17 +1393,17 @@ public class AK extends VergeEngine {
 			if(entity.get(player).getx()+8 <= entity.get(aa).getx())
 			{
 				entity.get(aa).face=0;
-				entity.get(aa).incx(-1);
+				entity.get(aa).incx(-2);
 				entity.get(aa).specframe=0+(monsterframe/6);
 			}
-			if(entity.get(player).getx()-8 >= entity.get(aa).getx())
+			else if(entity.get(player).getx()-8 >= entity.get(aa).getx())
 			{
 				entity.get(aa).face=1;
-				entity.get(aa).incx();
+				entity.get(aa).incx(1);
 				entity.get(aa).specframe=3+(monsterframe/6);
 			}
 			//if(Punched(aa,36,64)) { changechr(aa, "monster.chr"); KillThem(aa, BIGDUST);}
-			//if(akiddCollision(1,entity.get(aa).x+16, entity.get(aa).y+18, 22,46)) GetKilled(1);
+			if(akiddCollision(1,entity.get(aa).getx()+16, entity.get(aa).gety()+18, 22,46)) GetKilled(1);
 		}
 		
 	    }
@@ -1381,7 +1447,6 @@ public class AK extends VergeEngine {
 
 	static boolean Punched(int ind, int wx, int wy) // player is punching a monster
 	{
-	  	int a;
 	  	if(Action==1 || Cond==COND_MOTO || Cond==COND_STAR)
 	  	{
 		  	if((entity.get(player).getx()+(entity.get(player).face*24)) >= entity.get(ind).getx() && 
@@ -1421,6 +1486,8 @@ public class AK extends VergeEngine {
 
 		inv=120;
 		if(Energy>0) Energy--;
+		
+		// Die (Angel animation)
 		if(Energy==0 || type==2)
 		{
 			cc=entity.get(player).getx();
@@ -1443,7 +1510,28 @@ public class AK extends VergeEngine {
 			entity.get(player).setx(cc);entity.get(player).sety(dd);
 			if(Cond==COND_SWIM) NormalCondition(COND_SWIM);
 			else NormalCondition(COND_WALK);
+			
+			if(Gold > 500) {
+				Gold-=500;
+			}
+			else {
+				GameOver();
+			}
 		}
+	}
+	
+	static void GameOver() {
+		
+		while(!b1) {
+			rectfill(0,0,320,240,Color.BLACK, screen);
+			drawText(120, 100, "GAME OVER");
+			drawText(10, 120, "Not enough money to buy a new life (< $500)");
+			showpage();
+		}
+		unpress(1);
+		inv=0;
+		Prog = 1;
+		autoexec();
 	}
 
 	static void AddSprite(int x, int y, int type)
