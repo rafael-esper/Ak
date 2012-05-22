@@ -83,7 +83,7 @@ public class AK extends VergeEngine {
 	static final int BIGDUST = 51;
 
 	static int zx,zy, inx,iny, gotox, gotoy; 
-	static int State, Cond, Action, Gold, Prog=0, Slow=1, Energy, Lives;
+	static int State, Cond, Action, Gold=200, Prog=0, Slow=1, Energy, Lives;
 	static int velocity, friction, vertical, zonecalled, playerframe, alt, maxvel, pdelay,tdelay,monsterframe,wind,inv,brac;
 	static int akidd_px, akidd_py, akidd_vx, akidd_vy;
 	static int player=0;
@@ -121,26 +121,26 @@ public class AK extends VergeEngine {
 
 		timer = 0;
 		while(!b1) {
-			blit(0, 0, title, screen);
+			screen.blit(0, 0, title);
 			
 			if(timer < 75) {
-				rectfill(210, 4, 295, 50, background, screen);
+				screen.rectfill(210, 4, 295, 50, background);
 			}
 			if(timer < 150) {
-				rectfill(134, 134, 233, 169, background, screen);
+				screen.rectfill(134, 134, 233, 169, background);
 			}
 			if(timer < 225) {
-				rectfill(32, 7, 76, 60, background, screen);
+				screen.rectfill(32, 7, 76, 60, background);
 			}
 			if(timer < 300) {
-				rectfill(265, 72, 301, 156, background, screen);
+				screen.rectfill(265, 72, 301, 156, background);
 			}
 			if(timer < 375) {
-				rectfill(25, 78, 108, 194, background, screen);
+				screen.rectfill(25, 78, 108, 194, background);
 			}
 			
 			if(timer < 400 || timer%50 < 25)
-				rectfill(88, 207, 228, 218, background, screen);
+				screen.rectfill(88, 207, 228, 218, background);
 			
 			if(b3) {
 				exit("Thanks for playing JVerge Alex Kidd remake!");
@@ -245,12 +245,12 @@ public class AK extends VergeEngine {
 	  {
 		if(b>12) b=0;
 		b++;
-		rectfill(0,0,320,240,Color.BLACK, screen);
-		blit(0,0,mapa,screen);
-		drawText(10, 225, "Level " + (Prog-1) + ": " + currentLevel);
+		screen.rectfill(0,0,320,240,Color.BLACK);
+		screen.blit(0,0,mapa);
+		screen.printstring(10, 225, sys_font, "Level " + (Prog-1) + ": " + currentLevel);
 		
-		if(b<6) circlefill(inx,iny,b,b, Color.RED,screen);
-		if(b>=6) circlefill(inx,iny,10-b,10-b,Color.RED,screen);
+		if(b<6) screen.circlefill(inx,iny,b,b, Color.RED);
+		if(b>=6) screen.circlefill(inx,iny,10-b,10-b,Color.RED);
 		Wait(1);showpage();
 	  }
 	}
@@ -270,15 +270,15 @@ public class AK extends VergeEngine {
 			if(by<0) by=sy-1;
 			if(by>=sy) by=0;
 		
-			rectfill(100,100,100+(20*sx),105+(20*sy), Color.BLACK,screen);
-			rect(99,99,100+(20*sx),105+(20*sy), Color.WHITE,screen);
-			rect(98,98,101+(20*sx),106+(20*sy), Color.WHITE,screen);
+			screen.rectfill(100,100,100+(20*sx),105+(20*sy), Color.BLACK);
+			screen.rect(99,99,100+(20*sx),105+(20*sy), Color.WHITE);
+			screen.rect(98,98,101+(20*sx),106+(20*sy), Color.WHITE);
 			for(int i=0;i<sx;i++)
 			{
 				for(int j=0;j<sy;j++)
-					drawText(105+(i*20),110+(j*20),str((j*sx)+i+1));
+					screen.printstring(105+(i*20),110+(j*20),sys_font, str((j*sx)+i+1));
 			}
-			drawText(105+(bx*20),115+(by*20),"=");
+			screen.printstring(105+(bx*20),115+(by*20),sys_font, "=");
 			showpage();
 		}
 	}
@@ -288,36 +288,39 @@ public class AK extends VergeEngine {
 		switch(num)
 		{
 			case 1: // Gold I
-			settile(zx, zy, 1, 0);setzone(zx, zy, 0);
+			current_map.settile(zx, zy, 1, 0);current_map.setzone(zx, zy, 0);
 			playsound(snd[2]);Gold+=20;
 			break;
 		
 			case 2: // Gold II
-			settile(zx, zy, 1, 0);setzone(zx, zy, 0);
+			current_map.settile(zx, zy, 1, 0);current_map.setzone(zx, zy, 0);
 			playsound(snd[2]);Gold+=10;
 			break;
 			
 	 		case 3: // Rock
 	 		playsound(snd[4]);
-			if(gettile(zx, zy, 1)==32 || gettile(zx, zy, 1)==52) AddSprite(zx<<4,zy<<4,3); // cave rock
-			else if(gettile(zx, zy, 1)==65 || Cond==COND_SWIM) AddSprite(zx<<4,zy<<4,2); // sea rock
-			else  AddSprite(zx<<4,zy<<4,1); // common rock
-			settile(zx, zy, 1, 0);
-			setzone(zx, zy, 0);
-			setobs(zx, zy, 0);
+			if(current_map.gettile(zx, zy, 1)==32 || current_map.gettile(zx, zy, 1)==52) 
+				AddSprite(zx<<4,zy<<4,3); // cave rock
+			else if(current_map.gettile(zx, zy, 1)==65 || Cond==COND_SWIM) 
+				AddSprite(zx<<4,zy<<4,2); // sea rock
+			else  
+				AddSprite(zx<<4,zy<<4,1); // common rock
+			current_map.settile(zx, zy, 1, 0);
+			current_map.setzone(zx, zy, 0);
+			current_map.setobs(zx, zy, 0);
 			break;
 			
 			case 4: // Star
 			playsound(snd[5]);
-			setobs(zx, zy, 0);
-			if(random(0,1)==0) { settile(zx, zy, 1, 12);setzone(zx, zy, 1);}
-			else { settile(zx, zy, 1, 13);setzone(zx, zy, 2);}
+			current_map.setobs(zx, zy, 0);
+			if(random(0,1)==0) { current_map.settile(zx, zy, 1, 12);current_map.setzone(zx, zy, 1);}
+			else { current_map.settile(zx, zy, 1, 13);current_map.setzone(zx, zy, 2);}
 			AddSprite(zx<<4,zy<<4,Cond);
 			break;
 		
 			case 5: // Rice
-			settile(zx, zy, 1, 0);
-			setzone(zx, zy, 0);
+			current_map.settile(zx, zy, 1, 0);
+			current_map.setzone(zx, zy, 0);
 			DoLevel();
 			break;
 			
@@ -344,17 +347,17 @@ public class AK extends VergeEngine {
 
 	 		case 7: // Item (CHANGE!)
 	 		playsound(snd[4]);
-			settile(zx, zy, 1, 0);
-			setzone(zx, zy, 0);
-			setobs(zx, zy, 0);
+			current_map.settile(zx, zy, 1, 0);
+			current_map.setzone(zx, zy, 0);
+			current_map.setobs(zx, zy, 0);
 			AddSprite(zx<<4,zy<<4,Cond);
 			break;
 
 			case 8: // Skull
 	 		playsound(snd[4]);
-			settile(zx, zy, 1, 0);
-			setzone(zx, zy, 0);
-			setobs(zx, zy, 0);
+			current_map.settile(zx, zy, 1, 0);
+			current_map.setzone(zx, zy, 0);
+			current_map.setobs(zx, zy, 0);
 			AddSprite(zx<<4,zy<<4,Cond);
 			if (brac==0) Action=2;
 			break;
@@ -386,8 +389,8 @@ public class AK extends VergeEngine {
 			break;
 
 	 		case 14: // Item: Power Bracelet
-			settile(zx, zy, 1, 0);
-			setzone(zx, zy, 0);
+			current_map.settile(zx, zy, 1, 0);
+			current_map.setzone(zx, zy, 0);
 			brac = 1;
 			break;	
 			
@@ -405,14 +408,14 @@ public class AK extends VergeEngine {
 			boolean selYes = true;
 			while(!b1 && !b2) {
 				render();
-				rectfill(70, 45, 250, 150, Color.BLACK, screen);
-				drawText(80, 60, "Do you want to buy the");
-				if(i == 1) drawText(80, 85, " Motocycle for $200?");
-				if(i == 2) drawText(80, 85, " Peticopter for $200?");
-				drawText(120, 110, "YES");
-				drawText(120, 130, "NO");
-				tblit(200, 110, shop, screen);
-				drawText(105, selYes ? 110: 120, ">");
+				screen.rectfill(70, 45, 250, 150, Color.BLACK);
+				screen.printstring(80, 60, sys_font, "Do you want to buy the");
+				if(i == 1) screen.printstring(80, 85, sys_font, " Motocycle for $200?");
+				if(i == 2) screen.printstring(80, 85, sys_font, " Peticopter for $200?");
+				screen.printstring(120, 110, sys_font, "YES");
+				screen.printstring(120, 130, sys_font, "NO");
+				screen.tblit(200, 110, shop);
+				screen.printstring(105, selYes ? 110: 130, sys_font, ">");
 	
 				if(up || down) {
 					selYes = !selYes;
@@ -423,7 +426,7 @@ public class AK extends VergeEngine {
 			}
 			if(b1) {
 				unpress(1);
-				if(Gold >= 200) {
+				if(selYes && Gold >= 200) {
 					Gold-=200;
 					if(i==1) {
 						Cond=COND_MOTO;
@@ -435,6 +438,7 @@ public class AK extends VergeEngine {
 					}					
 				}
 			}
+			unpress(5);
 		}
 		
 	}
@@ -445,7 +449,7 @@ public class AK extends VergeEngine {
 	if(Prog==0) StartUp();
 
 	// This changes all 'monster.chr' entities to load the CHR info from an image file
-	CHR c = CHR.createCHRFromImage(32, 32, 8, 56, true, new VImage(load("monster_newt.png")));
+	CHR c = CHR.createCHRFromImage(0,0,32, 32, 8, 56, true, new VImage(load("monster_newt.png")));
 	for(int i=0; i<numentities; i++) {
 		if(entity.get(i).chrname.equalsIgnoreCase("monster.chr"))
 			entity.get(i).chr = c;
@@ -512,7 +516,7 @@ public class AK extends VergeEngine {
 	 if(getkey(SCAN_3)) Slow=2;
 	 if(getkey(SCAN_4)) Slow=3;
 	 if(getkey(SCAN_A)) {debug=true; while(!b1) UpdateControls();}
-/* Rafael: Cheats are disabled
+// Rafael: Cheats are disabled
 	 if(getkey(SCAN_B)) brac=1;
 	 if(getkey(SCAN_F)) {Cond=COND_FLY;State=S_STOPPED;}
 	 if(getkey(SCAN_H)) {Cond=COND_HELI;playmusic(load("res/music/swim.vgz"));} // Heli.mp3
@@ -524,14 +528,14 @@ public class AK extends VergeEngine {
 	 if(getkey(SCAN_P)) {
 	  //copyimagetoclipboard(screen);
 	  img = new VImage(current_map.getWidth()*16, current_map.getHeight()*16);
-	  rendermap(xwin, ywin, img);
-	  copyimagetoclipboard(img);
+	  current_map.render(xwin, ywin, img);
+	  img.copyImageToClipboard();
 	 }
 	 //if(getkey(SCAN_R]) setRandomAlex(1);
 	 if(getkey(SCAN_S)) {Cond=COND_SURF;playmusic(load("res/music/swim.vgz"));}
 	 if(getkey(SCAN_X)) Cond=COND_STAR;
 	 //if(getkey(SCAN_Z)) {Cond=COND_SHIW;changeCHR(player, "shinobi.chr");}
-	 */
+	 
 	 
 	 if(right && left && State==S_WALKING) { State=S_STOPPED;velocity=0;}
 
@@ -985,14 +989,14 @@ public class AK extends VergeEngine {
 
 	static void ProcessMisc()
 	{
-		drawText(10,10, "$ "+Gold);
-		//drawText(0,230,"Cond:"+str(Cond)+" State:"+str(State)+" Face:" + str(entity.get(player).face) + " Velocity: " + str(velocity));
+		screen.printstring(310-Integer.toString(Gold).length()*12,30, sys_font, "$ "+Gold);
+		//screen.printstring(0,230,"Cond:"+str(Cond)+" State:"+str(State)+" Face:" + str(entity.get(player).face) + " Velocity: " + str(velocity));
 		
 		for(int i=0;i<Energy;i++)
 		{
-			rectfill(316-(i*12),4,307-(i*12),9,new Color(0,0,0),screen);
-			rectfill(315-(i*12),5,308-(i*12),8,new Color(30,250,50),screen);
-			rect    (316-(i*12),4,307-(i*12),9,new Color(50,250,50),screen);
+			screen.rectfill(316-(i*12),4,307-(i*12),9,new Color(0,0,0));
+			screen.rectfill(315-(i*12),5,308-(i*12),8,new Color(30,250,50));
+			screen.rect    (316-(i*12),4,307-(i*12),9,new Color(50,250,50));
 		}
 		//Invencible
 		if(inv>0) 
@@ -1019,41 +1023,41 @@ public class AK extends VergeEngine {
 	 if(Cond==COND_MOTO || Cond==COND_SURF) ho=4;
 	 if(Cond==COND_WALK || Cond==COND_MOTO || Cond==COND_SURF || Cond==COND_STAR || Cond==COND_FLY || Cond==COND_ROPE) // normal
 	 {
-		if(direction==EAST) { for(a=7+vo; a<28; a+=2) { if(getobspixel((entity.get(player).getx()+8), entity.get(player).gety()+a)) return 1;  }} // left
-		if(direction==WEST) { for(a=7+vo; a<28; a+=2) { if(getobspixel((entity.get(player).getx()+24), entity.get(player).gety()+a)) return 1;  }} // right
+		if(direction==EAST) { for(a=7+vo; a<28; a+=2) { if(current_map.getobspixel((entity.get(player).getx()+8), entity.get(player).gety()+a)) return 1;  }} // left
+		if(direction==WEST) { for(a=7+vo; a<28; a+=2) { if(current_map.getobspixel((entity.get(player).getx()+24), entity.get(player).gety()+a)) return 1;  }} // right
 		
 		if(direction==NORTH && Cond==COND_ROPE && ProcessZones()==12) return 0; // end of stair
-		if(direction==NORTH) { for(a=11; a<20; a+=2) { if(getobspixel((entity.get(player).getx()+a), entity.get(player).gety()+(6+vo))) return 1; }} // up
+		if(direction==NORTH) { for(a=11; a<20; a+=2) { if(current_map.getobspixel((entity.get(player).getx()+a), entity.get(player).gety()+(6+vo))) return 1; }} // up
 
-		if(direction==SOUTH) { for(a=11-ho; a<20+ho; a+=2) { if(getobspixel((entity.get(player).getx()+a), entity.get(player).gety()+(28))) return 1;}} // down
-		if(direction==SOUTH && Cond==COND_SURF) { for(a=11-ho; a<20; a+=2) { if(getzone((entity.get(player).getx()+a)>>4, (entity.get(player).gety()+28)>>4)==6) return 1; }}
+		if(direction==SOUTH) { for(a=11-ho; a<20+ho; a+=2) { if(current_map.getobspixel((entity.get(player).getx()+a), entity.get(player).gety()+(28))) return 1;}} // down
+		if(direction==SOUTH && Cond==COND_SURF) { for(a=11-ho; a<20; a+=2) { if(current_map.getzone((entity.get(player).getx()+a)>>4, (entity.get(player).gety()+28)>>4)==6) return 1; }}
 
-	    	if(direction==4) { for(a=11; a<20; a+=2) { if(getobspixel((entity.get(player).getx()+a-6), (entity.get(player).gety()+28+6))) return 1;}} // face0 + lack of floor
-	    	if(direction==5) { for(a=11; a<20; a+=2) { if(getobspixel((entity.get(player).getx()+a+16), (entity.get(player).gety()+28+6))) return 1;}} // face1 + lack of floor
+	    	if(direction==4) { for(a=11; a<20; a+=2) { if(current_map.getobspixel((entity.get(player).getx()+a-6), (entity.get(player).gety()+28+6))) return 1;}} // face0 + lack of floor
+	    	if(direction==5) { for(a=11; a<20; a+=2) { if(current_map.getobspixel((entity.get(player).getx()+a+16), (entity.get(player).gety()+28+6))) return 1;}} // face1 + lack of floor
 
 	 }
 	 else if(Cond==COND_SWIM) //swimming
 	 {
-		//if(direction==1 && getobspixel(entity.get(player).x, entity.get(player).y+24)) return 1;
-		if(direction==EAST) { for(a=12; a<24; a+=2)  { if(getobspixel((entity.get(player).getx()+7), entity.get(player).gety()+a)) return 1;  }}
-		if(direction==WEST) { for(a=12; a<24; a+=2)  { if(getobspixel((entity.get(player).getx()+25), entity.get(player).gety()+a)) return 1;  }}
-		if(direction==NORTH) { for(a=8; a<22; a+=2) { if(getzone((entity.get(player).getx()+a)>>4, (entity.get(player).gety()+8)>>4)==6) return 1; }}
-		if(direction==NORTH) { for(a=8; a<26; a+=2) { if(getobspixel((entity.get(player).getx()+a), entity.get(player).gety()+(8))) return 1; }}
-		if(direction==SOUTH) { for(a=8; a<26; a+=2) { if(getobspixel((entity.get(player).getx()+a), entity.get(player).gety()+(25))) return 1;}}
+		//if(direction==1 && current_map.getobspixel(entity.get(player).x, entity.get(player).y+24)) return 1;
+		if(direction==EAST) { for(a=12; a<24; a+=2)  { if(current_map.getobspixel((entity.get(player).getx()+7), entity.get(player).gety()+a)) return 1;  }}
+		if(direction==WEST) { for(a=12; a<24; a+=2)  { if(current_map.getobspixel((entity.get(player).getx()+25), entity.get(player).gety()+a)) return 1;  }}
+		if(direction==NORTH) { for(a=8; a<22; a+=2) { if(current_map.getzone((entity.get(player).getx()+a)>>4, (entity.get(player).gety()+8)>>4)==6) return 1; }}
+		if(direction==NORTH) { for(a=8; a<26; a+=2) { if(current_map.getobspixel((entity.get(player).getx()+a), entity.get(player).gety()+(8))) return 1; }}
+		if(direction==SOUTH) { for(a=8; a<26; a+=2) { if(current_map.getobspixel((entity.get(player).getx()+a), entity.get(player).gety()+(25))) return 1;}}
 	 }
 	 else if (Cond==COND_HELI) // helicopter
 	 {
-	 	if(direction==EAST) { for(a=4; a<31; a+=2) { if(getobspixel((entity.get(player).getx()+4), entity.get(player).gety()+a)) return 1;  }}
-		if(direction==WEST) { for(a=4; a<31; a+=2) { if(getobspixel((entity.get(player).getx()+27), entity.get(player).gety()+a)) return 1;  }}
-		if(direction==NORTH) { for(a=5; a<27; a+=2) { if(getobspixel((entity.get(player).getx()+a), entity.get(player).gety()+(3))) return 1; }}
-		if(direction==SOUTH) { for(a=5; a<27; a+=2) { if(getobspixel((entity.get(player).getx()+a), entity.get(player).gety()+(32))) return 1;}}
+	 	if(direction==EAST) { for(a=4; a<31; a+=2) { if(current_map.getobspixel((entity.get(player).getx()+4), entity.get(player).gety()+a)) return 1;  }}
+		if(direction==WEST) { for(a=4; a<31; a+=2) { if(current_map.getobspixel((entity.get(player).getx()+27), entity.get(player).gety()+a)) return 1;  }}
+		if(direction==NORTH) { for(a=5; a<27; a+=2) { if(current_map.getobspixel((entity.get(player).getx()+a), entity.get(player).gety()+(3))) return 1; }}
+		if(direction==SOUTH) { for(a=5; a<27; a+=2) { if(current_map.getobspixel((entity.get(player).getx()+a), entity.get(player).gety()+(32))) return 1;}}
 	  }
 	  else if (Cond==COND_SHIW) // Shinobi Walking
 	  {
-	 	if(direction==EAST) { for(a=12; a<38; a+=2) { if(getobspixel((entity.get(player).getx()+12), entity.get(player).gety()+a)) return 1;  }}
-		if(direction==WEST) { for(a=12; a<38; a+=2) { if(getobspixel((entity.get(player).getx()+27), entity.get(player).gety()+a)) return 1;  }}
-		if(direction==NORTH) { for(a=14; a<24; a+=2) { if(getobspixel((entity.get(player).getx()+a), entity.get(player).gety()+(8))) return 1; }}
-		if(direction==SOUTH) { for(a=14; a<24; a+=2) { if(getobspixel((entity.get(player).getx()+a), entity.get(player).gety()+(38))) return 1;}}  	
+	 	if(direction==EAST) { for(a=12; a<38; a+=2) { if(current_map.getobspixel((entity.get(player).getx()+12), entity.get(player).gety()+a)) return 1;  }}
+		if(direction==WEST) { for(a=12; a<38; a+=2) { if(current_map.getobspixel((entity.get(player).getx()+27), entity.get(player).gety()+a)) return 1;  }}
+		if(direction==NORTH) { for(a=14; a<24; a+=2) { if(current_map.getobspixel((entity.get(player).getx()+a), entity.get(player).gety()+(8))) return 1; }}
+		if(direction==SOUTH) { for(a=14; a<24; a+=2) { if(current_map.getobspixel((entity.get(player).getx()+a), entity.get(player).gety()+(38))) return 1;}}  	
 	  }
 	 return 0;
 	}
@@ -1090,7 +1094,7 @@ public class AK extends VergeEngine {
 	   for(a=UpOffset; a<28; a+=2)   
 	   {   
 	   	zy=(entity.get(player).gety()+a)>>4;
-	   	if(getzone(zx,zy)>=3) return getzone(zx,zy);  // to avoid gold sacks
+	   	if(current_map.getzone(zx,zy)>=3) return current_map.getzone(zx,zy);  // to avoid gold sacks
 	   }
 	 return 0;
 	}
@@ -1108,7 +1112,7 @@ public class AK extends VergeEngine {
 				zx=(entity.get(player).getx()+a)>>4; 
 				zy=(entity.get(player).gety()+b)>>4;
 				if(Action==1) zx=(entity.get(player).getx()+a+8)>>4; // Cond==COND_WALK && 
-		 		z=getzone(zx,zy);
+		 		z=current_map.getzone(zx,zy);
 		 		if(z!=0 && zonecalled != z)   
 		 		{ 
 		   			zonecalled=z;  
@@ -1437,8 +1441,8 @@ public class AK extends VergeEngine {
 	static boolean Collision(int px, int py, int vx, int vy, int mx, int my, int wx, int wy) // player is touched by a monster or sprite
 	{
 	    if(debug){
-	    rect(mx-xwin,my-ywin,mx+wx-xwin,my+wy-ywin,new Color(200,100,100),screen);
-	    rect(px-xwin,py-ywin,px+vx-xwin,py+vy-ywin,new Color(100,100,200),screen);}
+	    screen.rect(mx-xwin,my-ywin,mx+wx-xwin,my+wy-ywin,new Color(200,100,100));
+	    screen.rect(px-xwin,py-ywin,px+vx-xwin,py+vy-ywin,new Color(100,100,200));}
 
 	    // this formula assumes the rectangles do not intersect
 	    if(mx > px+vx || mx+wx < px || my > py+vy || my+wy < py) return false;
@@ -1468,13 +1472,13 @@ public class AK extends VergeEngine {
 	static boolean Obstruct(int e, int face, int wx, int wy) 
 	{
 	    int a;
-	    if(face==0 || face==4) { for(a=0; a<wy; a+=2) { if(getobspixel((entity.get(e).getx()), (entity.get(e).gety()+a))) return true;  }}
-	    if(face==1 || face==5) { for(a=0; a<wy; a+=2) { if(getobspixel((entity.get(e).getx()+wx), (entity.get(e).gety()+a))) return true;  }}
-	    if(face==2) { for(a=0; a<wx; a+=2) { if(getobspixel((entity.get(e).getx()+a), entity.get(e).gety())) return true; }}
-	    if(face==3) { for(a=0; a<wx; a+=2) { if(getobspixel((entity.get(e).getx()+a), (entity.get(e).gety()+wy))) return true;}}
+	    if(face==0 || face==4) { for(a=0; a<wy; a+=2) { if(current_map.getobspixel((entity.get(e).getx()), (entity.get(e).gety()+a))) return true;  }}
+	    if(face==1 || face==5) { for(a=0; a<wy; a+=2) { if(current_map.getobspixel((entity.get(e).getx()+wx), (entity.get(e).gety()+a))) return true;  }}
+	    if(face==2) { for(a=0; a<wx; a+=2) { if(current_map.getobspixel((entity.get(e).getx()+a), entity.get(e).gety())) return true; }}
+	    if(face==3) { for(a=0; a<wx; a+=2) { if(current_map.getobspixel((entity.get(e).getx()+a), (entity.get(e).gety()+wy))) return true;}}
 	    
-	    if(face==4) { for(a=0; a<wx; a+=2) { if(!getobspixel((entity.get(e).getx()+a-4), (entity.get(e).gety()+wy+12))) return true;}} // face0 + lack of floor
-	    if(face==5) { for(a=0; a<wx; a+=2) { if(!getobspixel((entity.get(e).getx()+a+6), (entity.get(e).gety()+wy+12))) return true;}} // face1 + lack of floor
+	    if(face==4) { for(a=0; a<wx; a+=2) { if(!current_map.getobspixel((entity.get(e).getx()+a-4), (entity.get(e).gety()+wy+12))) return true;}} // face0 + lack of floor
+	    if(face==5) { for(a=0; a<wx; a+=2) { if(!current_map.getobspixel((entity.get(e).getx()+a+6), (entity.get(e).gety()+wy+12))) return true;}} // face1 + lack of floor
 	    return false;
 	}
 
@@ -1523,9 +1527,9 @@ public class AK extends VergeEngine {
 	static void GameOver() {
 		
 		while(!b1) {
-			rectfill(0,0,320,240,Color.BLACK, screen);
-			drawText(120, 100, "GAME OVER");
-			drawText(10, 120, "Not enough money to buy a new life (< $500)");
+			screen.rectfill(0,0,320,240,Color.BLACK);
+			screen.printstring(120, 100, sys_font, "GAME OVER");
+			screen.printstring(10, 120, sys_font, "Not enough money to buy a new life (< $500)");
 			showpage();
 		}
 		unpress(1);
@@ -1577,7 +1581,15 @@ public class AK extends VergeEngine {
 		VImage ptr; 
 		int bb, rdc, ze;
 		//wind
-		if(wind>0) { ywin-=50;for(int i=0;i<40;i++) { bb=random(0,240);rdc=random(0,320);line(rdc,bb,rdc,bb-8,new Color(200,200,200),screen);}}
+		if(wind>0) { 
+			ywin-=50;
+			for(int i=0;i<40;i++) 
+			{ 
+				bb=random(0,240);
+				rdc=random(0,320);
+				screen.line(rdc,bb,rdc,bb-8,new Color(200,200,200));
+			}
+		}
 		
 		for(int i=0;i<20;i++)
 		{
@@ -1590,17 +1602,17 @@ public class AK extends VergeEngine {
 				else ptr=rock_t; // common rock
 				if(spt[i]<=9) // rock fragment
 				{
-					tblit(spx[i]-xwin-(35-spe[i]),spy[i]-ywin,ptr,screen);
-					tblit(spx[i]-xwin+5,spy[i]-ywin,ptr,screen);
-					tblit(spx[i]-xwin-(35-spe[i]),spy[i]-ywin+12,ptr,screen);
-					tblit(spx[i]-xwin+5,spy[i]-ywin+12,ptr,screen);
+					screen.tblit(spx[i]-xwin-(35-spe[i]),spy[i]-ywin,ptr);
+					screen.tblit(spx[i]-xwin+5,spy[i]-ywin,ptr);
+					screen.tblit(spx[i]-xwin-(35-spe[i]),spy[i]-ywin+12,ptr);
+					screen.tblit(spx[i]-xwin+5,spy[i]-ywin+12,ptr);
 					spx[i]++;
 					spy[i]+=6;
 				}
 				if(spt[i]==10 || spt[i]==11) // leaf
 				{
-					tblit(spx[i]-xwin-(120-(spe[i]*2)),spy[i]-ywin,leaf,screen);
-					tblit(spx[i]-xwin+10,spy[i]-ywin,leaf,screen);
+					screen.tblit(spx[i]-xwin-(120-(spe[i]*2)),spy[i]-ywin,leaf);
+					screen.tblit(spx[i]-xwin+10,spy[i]-ywin,leaf);
 					if(akiddCollision(1,spx[i]-(120-(spe[i]*2)), spy[i], 8,6)) GetKilled(1);
 					if(akiddCollision(1,spx[i]+10, spy[i], 8,6)) GetKilled(1);
 					spx[i]+=spt[i]-9;
@@ -1608,50 +1620,43 @@ public class AK extends VergeEngine {
 				}
 				if(spt[i]==12) // bracelete to the left
 				{
-					tblit(spx[i]-xwin,spy[i]-ywin,brac0,screen);
-					zx=spx[i]>>4;zy=(spy[i])>>4; ze = getzone(zx,zy);
+					screen.tblit(spx[i]-xwin,spy[i]-ywin,brac0);
+					zx=spx[i]>>4;zy=(spy[i])>>4; ze = current_map.getzone(zx,zy);
 					if(ze==3 || ze==4 || ze==7 || ze==8) CallEvent(ze);
 					else {	
-						zx=spx[i]>>4;zy=(spy[i]+8)>>4;ze = getzone(zx,zy);
+						zx=spx[i]>>4;zy=(spy[i]+8)>>4;ze = current_map.getzone(zx,zy);
 						if(ze==3 || ze==4 || ze==7 || ze==8) CallEvent(ze);
 						else
-							if(getobspixel(spx[i],spy[i]) || getobspixel(spx[i],spy[i]+8)) spe[i]=0;
+							if(current_map.getobspixel(spx[i],spy[i]) || current_map.getobspixel(spx[i],spy[i]+8)) spe[i]=0;
 					}
 					spx[i]-=8;
 				}
 				if(spt[i]==13) // bracelete to the right
 				{
-					tblit(spx[i]-xwin,spy[i]-ywin,brac1,screen);
-					zx=spx[i]>>4;zy=(spy[i])>>4; ze = getzone(zx,zy);
+					screen.tblit(spx[i]-xwin,spy[i]-ywin,brac1);
+					zx=spx[i]>>4;zy=(spy[i])>>4; ze = current_map.getzone(zx,zy);
 					if(ze==3 || ze==4 || ze==7 || ze==8) CallEvent(ze);
 					else {	
-						zx=spx[i]>>4;zy=(spy[i]+8)>>4;ze = getzone(zx,zy);
+						zx=spx[i]>>4;zy=(spy[i]+8)>>4;ze = current_map.getzone(zx,zy);
 						if(ze==3 || ze==4 || ze==7 || ze==8) CallEvent(ze);
 						else
-							if(getobspixel(spx[i],spy[i]) || getobspixel(spx[i],spy[i]+8)) spe[i]=0;
+							if(current_map.getobspixel(spx[i],spy[i]) || current_map.getobspixel(spx[i],spy[i]+8)) spe[i]=0;
 					}
 					spx[i]+=8;
 				}
 				if(spt[i]==14 || spt[i]==15) // firing
 				{
-					tblit(spx[i]-xwin,spy[i]-ywin,firing,screen);
-					zx=spx[i]>>4;zy=spy[i]>>4; ze = getzone(zx,zy);	
-					if(getobspixel(spx[i],spy[i]) || getobspixel(spx[i],spy[i]+7)) spe[i]=0;
+					screen.tblit(spx[i]-xwin,spy[i]-ywin,firing);
+					zx=spx[i]>>4;zy=spy[i]>>4; ze = current_map.getzone(zx,zy);	
+					if(current_map.getobspixel(spx[i],spy[i]) || current_map.getobspixel(spx[i],spy[i]+7)) spe[i]=0;
 					if(ze==3 || ze==4 || ze==7 || ze==8) CallEvent(ze);
-					zx=spx[i]>>4;zy=(spy[i]+8)>>4;ze = getzone(zx,zy);
+					zx=spx[i]>>4;zy=(spy[i]+8)>>4;ze = current_map.getzone(zx,zy);
 					if(ze==3 || ze==4 || ze==7 || ze==8) CallEvent(ze);
 					if(spt[i]==14) spx[i]-=8; else spx[i]+=8;
 				}
 			}
 		}
 	}
-
-	public static void drawText(int x, int y, String text) {
-		screen.g.setFont(sys_font);
-		screen.g.setColor(Color.WHITE);
-		screen.g.drawString(text, x, y);	
-	}
-
 
 	/* Version 
 	22/06/2000	Sounds, Basic engine, Akidd character
