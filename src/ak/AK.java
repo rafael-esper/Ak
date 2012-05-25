@@ -10,6 +10,7 @@ import java.net.URL;
 import core.VergeEngine;
 import domain.CHR;
 import domain.VImage;
+import domain.VSound;
 
 public class AK extends VergeEngine {
 
@@ -90,7 +91,7 @@ public class AK extends VergeEngine {
 	static boolean debug;
 	static VImage img=null;
 	static VImage mapa, rock_t, rock_g, rock_c, leaf, brac0, brac1, firing, shop;
-	static URL snd[] = new URL[20];
+	static VSound snd[] = new VSound[20];
 	static int spx[] = new int [25]; // for rock fragments and other sprites, (x,y),energy and type
 	static int spy[] = new int [25];
 	static int spe[] = new int [25];
@@ -217,16 +218,16 @@ public class AK extends VergeEngine {
 			mapa=new VImage(load("res/image/world.gif"));
 			
 			
-			snd[1]=load("res/sound/Mapa.mp3");  
-			snd[2]=load("res/sound/Gold.wav");
-			snd[3]=load("res/sound/Punch.wav"); 
-			snd[4]=load("res/sound/Rock.wav");
-			snd[5]=load("res/sound/Star.wav");
-			snd[6]=load("res/sound/Death.wav");
-			snd[7]=load("res/sound/Hit.wav");
-			snd[8]=load("res/sound/Brac.wav");
-			snd[9]=load("res/sound/Item.wav");
-			snd[10]=load("res/sound/Water.wav");		
+			snd[1]=new VSound(load("res/sound/Mapa.mp3"));  
+			snd[2]=new VSound(load("res/sound/Gold.wav"));
+			snd[3]=new VSound(load("res/sound/Punch.wav")); 
+			snd[4]=new VSound(load("res/sound/Rock.wav"));
+			snd[5]=new VSound(load("res/sound/Star.wav"));
+			snd[6]=new VSound(load("res/sound/Death.wav"));
+			snd[7]=new VSound(load("res/sound/Hit.wav"));
+			snd[8]=new VSound(load("res/sound/Brac.wav"));
+			snd[9]=new VSound(load("res/sound/Item.wav"));
+			snd[10]=new VSound(load("res/sound/Water.wav"));		
 	
 			Name="akidd.chr";
 		}
