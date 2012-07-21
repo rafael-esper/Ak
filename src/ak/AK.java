@@ -338,7 +338,7 @@ public class AK extends VergeEngine {
 					entity.get(player).incy(2);
 					entity.get(player).specframe=Showplayer(); 
 					ProcessEnemies();ProcessSprites();ProcessMisc();
-					render();showpage();
+					screen.render();showpage();
 					Wait(1);
 				}
 				currentMusic="res/music/swim.vgz";
@@ -408,7 +408,7 @@ public class AK extends VergeEngine {
 			unpress(5);
 			boolean selYes = true;
 			while(!b1 && !b2) {
-				render();
+				screen.render();
 				screen.rectfill(70, 45, 250, 150, Color.BLACK);
 				screen.printstring(80, 60, sys_font, "Do you want to buy the");
 				if(i == 1) screen.printstring(80, 85, sys_font, " Motocycle for $200?");
@@ -476,7 +476,7 @@ public class AK extends VergeEngine {
 		 
 		 	Wait(Slow);
 			 //timer=0;
-	 		render();ControlKeys();ProcessZones();
+	 		screen.render();ControlKeys();ProcessZones();
 	 		if(Cond==COND_WALK || Cond==COND_MOTO || Cond==COND_SURF || Cond==COND_SHIW) 
 	 			MovePlayer(); 
 	 		else 
@@ -1497,7 +1497,7 @@ public class AK extends VergeEngine {
 		{
 			cc=entity.get(player).getx();
 			dd=entity.get(player).gety();
-			cameratracking=0;render();showpage();
+			cameratracking=0;screen.render();showpage();
 			Wait(30);current_map.renderstring = "1,2,E";
 			stopmusic();
 			Wait(20);
@@ -1508,7 +1508,7 @@ public class AK extends VergeEngine {
 				if(bb>5) entity.get(player).specframe=19;
 				if(bb>=12) bb=0;
 				Wait(1);entity.get(player).incy(-1);
-				bb++;render();showpage();
+				bb++;screen.render();showpage();
 			}
 			Wait(50);
 			cameratracking=1; current_map.renderstring = "1,E,2";
