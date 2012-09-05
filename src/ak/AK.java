@@ -1498,7 +1498,7 @@ public class AK extends VergeEngine {
 			cc=entity.get(player).getx();
 			dd=entity.get(player).gety();
 			cameratracking=0;screen.render();showpage();
-			Wait(30);current_map.renderstring = "1,2,E";
+			Wait(30);current_map.setRenderstring("1,2,E");
 			stopmusic();
 			Wait(20);
 			playsound(snd[6]);
@@ -1511,7 +1511,7 @@ public class AK extends VergeEngine {
 				bb++;screen.render();showpage();
 			}
 			Wait(50);
-			cameratracking=1; current_map.renderstring = "1,E,2";
+			cameratracking=1; current_map.setRenderstring("1,E,2");
 			entity.get(player).setx(cc);entity.get(player).sety(dd);
 			if(Cond==COND_SWIM) NormalCondition(COND_SWIM);
 			else NormalCondition(COND_WALK);
