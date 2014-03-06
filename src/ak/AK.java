@@ -114,7 +114,7 @@ public class AK extends VergeEngine {
 
 	public static void autoexec() 
 	{
-		setappname("Alex Kidd: Remake");
+		setAppName("Alex Kidd: Remake");
 		
 		VImage title = new VImage(load("res/image/Title.PNG"));
 		playmusic(load("res/music/intro.vgz"));
@@ -248,7 +248,7 @@ public class AK extends VergeEngine {
 		b++;
 		screen.rectfill(0,0,320,240,Color.BLACK);
 		screen.blit(0,0,mapa);
-		screen.printstring(10, 225, sys_font, "Level " + (Prog-1) + ": " + currentLevel);
+		screen.printString(10, 225, sys_font, "Level " + (Prog-1) + ": " + currentLevel);
 		
 		if(b<6) screen.circlefill(inx,iny,b,b, Color.RED);
 		if(b>=6) screen.circlefill(inx,iny,10-b,10-b,Color.RED);
@@ -277,9 +277,9 @@ public class AK extends VergeEngine {
 			for(int i=0;i<sx;i++)
 			{
 				for(int j=0;j<sy;j++)
-					screen.printstring(105+(i*20),110+(j*20),sys_font, str((j*sx)+i+1));
+					screen.printString(105+(i*20),110+(j*20),sys_font, str((j*sx)+i+1));
 			}
-			screen.printstring(105+(bx*20),115+(by*20),sys_font, "=");
+			screen.printString(105+(bx*20),115+(by*20),sys_font, "=");
 			showpage();
 		}
 	}
@@ -410,13 +410,13 @@ public class AK extends VergeEngine {
 			while(!b1 && !b2) {
 				screen.render();
 				screen.rectfill(70, 45, 250, 150, Color.BLACK);
-				screen.printstring(80, 60, sys_font, "Do you want to buy the");
-				if(i == 1) screen.printstring(80, 85, sys_font, " Motocycle for $200?");
-				if(i == 2) screen.printstring(80, 85, sys_font, " Peticopter for $200?");
-				screen.printstring(120, 110, sys_font, "YES");
-				screen.printstring(120, 130, sys_font, "NO");
+				screen.printString(80, 60, sys_font, "Do you want to buy the");
+				if(i == 1) screen.printString(80, 85, sys_font, " Motocycle for $200?");
+				if(i == 2) screen.printString(80, 85, sys_font, " Peticopter for $200?");
+				screen.printString(120, 110, sys_font, "YES");
+				screen.printString(120, 130, sys_font, "NO");
 				screen.tblit(200, 110, shop);
-				screen.printstring(105, selYes ? 110: 130, sys_font, ">");
+				screen.printString(105, selYes ? 110: 130, sys_font, ">");
 	
 				if(up || down) {
 					selYes = !selYes;
@@ -450,7 +450,7 @@ public class AK extends VergeEngine {
 	if(Prog==0) StartUp();
 
 	// This changes all 'monster.chr' entities to load the CHR info from an image file
-	CHR c = CHR.createCHRFromImage(0,0,32, 32, 8, 56, true, new VImage(load("monster_newt.png")));
+	CHR c = CHR.createCHRFromImage(0,0, 32, 32, 0, 0, 8, 56, true, new VImage(load("monster_newt.png")));
 	for(int i=0; i<numentities; i++) {
 		if(entity.get(i).chrname.equalsIgnoreCase("monster.chr"))
 			entity.get(i).chr = c;
@@ -990,7 +990,7 @@ public class AK extends VergeEngine {
 
 	static void ProcessMisc()
 	{
-		screen.printstring(310-Integer.toString(Gold).length()*12,30, sys_font, "$ "+Gold);
+		screen.printString(310-Integer.toString(Gold).length()*12,30, sys_font, "$ "+Gold);
 		//screen.printstring(0,230,"Cond:"+str(Cond)+" State:"+str(State)+" Face:" + str(entity.get(player).face) + " Velocity: " + str(velocity));
 		
 		for(int i=0;i<Energy;i++)
@@ -1529,8 +1529,8 @@ public class AK extends VergeEngine {
 		
 		while(!b1) {
 			screen.rectfill(0,0,320,240,Color.BLACK);
-			screen.printstring(120, 100, sys_font, "GAME OVER");
-			screen.printstring(10, 120, sys_font, "Not enough money to buy a new life (< $500)");
+			screen.printString(120, 100, sys_font, "GAME OVER");
+			screen.printString(10, 120, sys_font, "Not enough money to buy a new life (< $500)");
 			showpage();
 		}
 		unpress(1);
